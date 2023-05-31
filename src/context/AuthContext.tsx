@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }: any) => {
             });
             await AsyncStorage.setItem('token', data.token);
         } catch (error: any) {
-            dispatch({ type: 'addError', payload: error.response.data.msg || 'Wrong information' });
+            dispatch({ type: 'addError', payload: error.response.data.errors[0].msg || 'Check the information' });
         }
     };
 
