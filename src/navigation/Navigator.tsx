@@ -8,7 +8,14 @@ const Stack = createStackNavigator();
 
 export const Navigator = () => {
     return (
-        <Stack.Navigator>
+        <Stack.Navigator
+            screenOptions={{
+                headerShown: false,
+                cardStyle: {
+                    backgroundColor: '#fff',
+                },
+            }}
+        >
             <Stack.Screen name="LoginScreen" component={LoginScreen} />
             <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
             <Stack.Screen name="ProtectedScreen" component={ProtectedScreen} />
