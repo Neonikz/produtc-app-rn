@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { View, Text, TextInput, Platform, TouchableOpacity, KeyboardAvoidingView, Keyboard } from 'react-native';
+import React, { useContext, useEffect } from 'react';
+import { View, Text, TextInput, Platform, TouchableOpacity, KeyboardAvoidingView, Keyboard, Alert } from 'react-native';
 import { Background } from '../components/Background';
 import { WhiteLogo } from '../components/WhiteLogo';
 import { loginStyles } from '../theme/loginTheme';
@@ -11,7 +11,7 @@ interface Props extends StackScreenProps<any, any> { }
 
 export const LoginScreen = ({ navigation }: Props) => {
 
-    const { signUp } = useContext(AuthContext);
+    const { logIn, removeError, errorMessage } = useContext(AuthContext);
 
     const { email, password, onChange } = useForm({
         email: '',
@@ -20,8 +20,24 @@ export const LoginScreen = ({ navigation }: Props) => {
 
     const onLogin = () => {
         Keyboard.dismiss();
-        signUp({ correo: email, password });
+        logIn({ correo: email, password });
     };
+
+    useEffect(() => {
+        if (!errorMessage) return;
+
+        Alert.alert(
+            'Something went wrong',
+            errorMessage,
+            [
+                {
+                    text: 'Ok',
+                    onPress: removeError,
+                },
+            ]
+        );
+    }, [errorMessage]);
+
 
     return (
         <>
