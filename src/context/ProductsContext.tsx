@@ -5,9 +5,9 @@ import coffeApi from '../api/coffeApi';
 type ProductsContextProps = {
     products: Producto[];
     loadProducts: () => Promise<void>;
-    addProduct: (categoryId: string, productName: string) => Promise<void>;
+    addProduct: (categoryId: string, productName: string) => Promise<Producto>;
     updateProduct: (categoryId: string, productName: string, productId: string) => Promise<void>;
-    deleteProduct: (productId: string) => Promise<void>;
+    // deleteProduct: (productId: string) => Promise<void>;
     loadProductById: (productId: string) => Promise<Producto>;
     uploadImage: (data: any, id: string) => Promise<void>;
 };
@@ -34,24 +34,42 @@ export const ProductsProvider = ({ children }: any) => {
         }
     };
 
-    const addProduct = async (categoryId: string, productName: string) => {
-
+    const addProduct = async (categoryId: string, productName: string): Promise<Producto> => {
+        const resp = await coffeApi.post<Producto>('/productos', {
+            nombre: productName,
+            categoria: categoryId,
+        });
+        setProducts([...products, resp.data]);
+        return resp.data;
     };
 
     const updateProduct = async (categoryId: string, productName: string, productId: string) => {
-
+        try {
+            const resp = await coffeApi.put<Producto>(`/productos/${productId}`, {
+                nombre: productName,
+                categoria: categoryId,
+            });
+            setProducts(products.map(product => {
+                return (product._id === productId)
+                    ? resp.data
+                    : product;
+            }));
+        } catch (error) {
+            console.log(error, 'updating product');
+        }
     };
 
-    const deleteProduct = async (id: string) => {
+    // const deleteProduct = async (id: string) => {
+    //     console.log(id);
+    // };
 
-    };
-
-    const loadProductById = async (id: string) => {
-        throw new Error('Not implemented');
+    const loadProductById = async (id: string): Promise<Producto> => {
+        const resp = await coffeApi.get<Producto>(`/productos/${id}`);
+        return resp.data;
     };
 
     const uploadImage = async (data: any, id: string) => {
-
+        console.log(data, id)
     };
 
 
@@ -61,7 +79,7 @@ export const ProductsProvider = ({ children }: any) => {
             loadProducts,
             addProduct,
             updateProduct,
-            deleteProduct,
+            // deleteProduct,
             loadProductById,
             uploadImage,
         }}>
