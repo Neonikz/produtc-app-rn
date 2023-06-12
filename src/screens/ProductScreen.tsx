@@ -116,7 +116,7 @@ export const ProductScreen = ({ navigation, route }: Props) => {
 
 
                 <Button
-                    title="Save"
+                    title="Save product"
                     color="#5856D6"
                     onPress={() => saveOrUpdate()}
                 />
